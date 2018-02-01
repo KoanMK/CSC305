@@ -1,0 +1,3 @@
+/Users/nigeld/Desktop/build-icg2-Desktop-Default/trianglemesh/CMakeFiles/trianglemesh.dir
+/Users/nigeld/Desktop/build-icg2-Desktop-Default/CMakeFiles/update_opengp.dir
+/Users/nigeld/Desktop/build-icg2-Desktop-Default/CMakeFiles/common_headers.dir

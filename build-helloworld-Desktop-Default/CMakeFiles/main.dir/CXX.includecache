@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/nigeld/Desktop/helloworld/Shape.h
+iostream
+-
+
+/Users/nigeld/Desktop/helloworld/main.cpp
+iostream
+-
+Shape.h
+/Users/nigeld/Desktop/helloworld/Shape.h
+
+/Users/nigeld/Desktop/helloworld/shape.cpp
+iostream
+-
+Shape.h
+/Users/nigeld/Desktop/helloworld/Shape.h
+

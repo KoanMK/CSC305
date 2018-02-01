@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="icg" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\common\;CMake Files\raytrace\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="update_opengp">
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 update_opengp" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="common_headers">
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 common_headers" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="raytrace">
+         <Option output="/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/raytrace" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DWITH_EIGEN" />
+            <Add option="-DOPENGP_HEADERONLY" />
+            <Add option="-DUSE_EIGEN" />
+            <Add option="-DWITH_OPENGP" />
+            <Add option="-DWITH_OPENGL" />
+            <Add option="-DGLEW_STATIC" />
+            <Add option="-DWITH_GLEW" />
+            <Add option="-DWITH_GLFW" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/usr/include" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include" />
+            <Add directory="/Library/Frameworks" />
+            <Add directory="/System/Library/Frameworks" />
+            <Add directory="/Users/nigeld/Desktop/icg/common" />
+            <Add directory="/Users/nigeld/Desktop/icg/common/../external/OpenGP/src" />
+            <Add directory="/Users/nigeld/Desktop/icg/external/eigen/include" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 raytrace" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="raytrace/fast">
+         <Option output="/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/raytrace" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DWITH_EIGEN" />
+            <Add option="-DOPENGP_HEADERONLY" />
+            <Add option="-DUSE_EIGEN" />
+            <Add option="-DWITH_OPENGP" />
+            <Add option="-DWITH_OPENGL" />
+            <Add option="-DGLEW_STATIC" />
+            <Add option="-DWITH_GLEW" />
+            <Add option="-DWITH_GLFW" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/usr/include" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.0.0/include" />
+            <Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include" />
+            <Add directory="/Library/Frameworks" />
+            <Add directory="/System/Library/Frameworks" />
+            <Add directory="/Users/nigeld/Desktop/icg/common" />
+            <Add directory="/Users/nigeld/Desktop/icg/common/../external/OpenGP/src" />
+            <Add directory="/Users/nigeld/Desktop/icg/external/eigen/include" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 raytrace/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/Users/nigeld/Desktop/build-icg-Desktop-Default/raytrace/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/MLogger.h">
+         <Option target="common_headers"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/bmpwrite.h">
+         <Option target="common_headers"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/check_error_gl.h">
+         <Option target="common_headers"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/icg_common.h">
+         <Option target="common_headers"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/imshow.h">
+         <Option target="common_headers"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/picoPNG.h">
+         <Option target="common_headers"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/raytrace/main.cpp">
+         <Option target="raytrace"/>
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/config.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/Eigen.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/FindEigen3.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/OpenGP.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/FindOpenGP.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/OpenGL.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/GLEW.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/FindGLEW.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/GLFW.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/common/FindGLFW3.cmake">
+          <Option virtualFolder="CMake Files\common\" />
+      </Unit>
+      <Unit filename="/Users/nigeld/Desktop/icg/raytrace/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\raytrace\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>
