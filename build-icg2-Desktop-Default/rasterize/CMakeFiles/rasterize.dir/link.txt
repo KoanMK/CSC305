@@ -1,1 +1,0 @@
-/usr/bin/g++    -std=c++11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/rasterize.dir/main.cpp.o  -o rasterize  -framework AGL -framework OpenGL /usr/local/lib/libGLEW.dylib /usr/local/lib/libglfw3.dylib 
