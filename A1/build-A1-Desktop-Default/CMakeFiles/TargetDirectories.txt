@@ -1,0 +1,3 @@
+/Users/nigeld/Desktop/A1/build-A1-Desktop-Default/CMakeFiles/update_opengp.dir
+/Users/nigeld/Desktop/A1/build-A1-Desktop-Default/raytrace/CMakeFiles/raytrace.dir
+/Users/nigeld/Desktop/A1/build-A1-Desktop-Default/CMakeFiles/common_headers.dir
