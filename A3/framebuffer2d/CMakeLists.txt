@@ -10,5 +10,7 @@ endif()
 target_link_libraries(${EXERCISENAME} ${COMMON_LIBS})
 
 #--- data need to be copied to run folder
-file(COPY ${PROJECT_SOURCE_DIR}/framebuffer2d/nyancat.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ${PROJECT_SOURCE_DIR}/framebuffer2d/background.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/framebuffer2d/ship.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/framebuffer2d/bender.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/framebuffer2d/space2.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${PROJECT_SOURCE_DIR}/framebuffer2d/moon.png DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

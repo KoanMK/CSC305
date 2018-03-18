@@ -1,5 +1,6 @@
 #include <OpenGP/GL/Application.h>
 #include <OpenGP/external/LodePNG/lodepng.cpp>
+#include <math.h>
 
 using namespace OpenGP;
 
@@ -19,7 +20,7 @@ const char* quad_fshader =
 #include "quad_fshader.glsl"
 ;
 
-const float SpeedFactor = 1;
+const float SpeedFactor = 0.2;
 void init();
 void quadInit(std::unique_ptr<GPUMesh> &quad);
 void loadTexture(std::unique_ptr<RGBA8Texture> &texture, const char* filename);
@@ -30,8 +31,10 @@ std::unique_ptr<GPUMesh> quad;
 std::unique_ptr<Shader> quadShader;
 std::unique_ptr<Shader> fbShader;
 
-std::unique_ptr<RGBA8Texture> cat;
+std::unique_ptr<RGBA8Texture> ship;
 std::unique_ptr<RGBA8Texture> stars;
+std::unique_ptr<RGBA8Texture> moon;
+std::unique_ptr<RGBA8Texture> bender;
 
 /// TODO: declare Framebuffer and color buffer texture
 
@@ -97,8 +100,10 @@ void init(){
 
     quadInit(quad);
 
-    loadTexture(cat, "nyancat.png");
-    loadTexture(stars, "background.png");
+    loadTexture(ship, "ship.png");
+    loadTexture(bender, "bender.png");
+    loadTexture(moon, "moon.png");
+    loadTexture(stars, "space2.png");
 }
 
 void quadInit(std::unique_ptr<GPUMesh> &quad) {
@@ -116,9 +121,9 @@ void quadInit(std::unique_ptr<GPUMesh> &quad) {
     quad->set_triangles(quad_triangle_indices);
     std::vector<Vec2> quad_vtexcoord = {
         Vec2(0, 0),
-        Vec2(0,  1),
-        Vec2( 1, 0),
-        Vec2( 1,  1)
+        Vec2(0, 1),
+        Vec2(1, 0),
+        Vec2(1, 1)
     };
     quad->set_vtexcoord(quad_vtexcoord);
 }
@@ -146,46 +151,102 @@ void loadTexture(std::unique_ptr<RGBA8Texture> &texture, const char *filename) {
     texture->upload_raw(width, height, &image[0]);
 }
 
+float getPt( float n1 , float n2 , float perc ) {
+    float ret_val;
+    float diff = n2 - n1;
+    ret_val = n1 + ( diff * perc );
+    return ret_val;
+}
+
+//Calaculates the bezier cureve given three points and the time variable.
+Vec2 calculateBezier(float t, Vec2 p0, Vec2 p1, Vec2 p2) {
+    Vec2 xy;
+
+    float xcord;
+    float ycord;
+    float xa;
+    float ya;
+    float xb;
+    float yb;
+
+    xa = getPt( p0(0) , p1(0) , t );
+    ya = getPt( p0(1) , p1(1) , t );
+    xb = getPt( p1(0) , p2(0) , t );
+    yb = getPt( p1(1) , p2(1) , t );
+
+    xcord = getPt( xa , xb , t );
+    ycord = getPt( ya , yb , t );
+    xy = Vec2(xcord, ycord);
+    return xy;
+}
+
+//Draws individual elements into the scene.
+void drawElement(Transform matrix, std::unique_ptr<RGBA8Texture> &texture) {
+    quadShader->bind();
+    quadShader->set_uniform("M", matrix.matrix());
+    // Make texture unit 0 active
+    glActiveTexture(GL_TEXTURE0);
+    // Bind the texture to the active unit for drawing
+    texture->bind();
+    // Set the shader's texture uniform to the index of the texture unit we have
+    // bound the texture to
+    quadShader->set_uniform("tex", 0);
+    quad->set_attributes(*quadShader);
+    quad->draw();
+    texture->unbind();
+}
+
+//Creates a window that displays the drawn elements. Calls the drawElement() method.
 void drawScene(float timeCount)
 {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    float t2 = timeCount * SpeedFactor;
     float t = timeCount * SpeedFactor;
-    Transform TRS = Transform::Identity();
-    //background.draw(TRS.matrix());
-    quadShader->bind();
-    quadShader->set_uniform("M", TRS.matrix());
-    // Make texture unit 0 active
-    glActiveTexture(GL_TEXTURE0);
-    // Bind the texture to the active unit for drawing
-    stars->bind();
-    // Set the shader's texture uniform to the index of the texture unit we have
-    // bound the texture to
-    quadShader->set_uniform("tex", 0);
-    quad->set_attributes(*quadShader);
-    quad->draw();
-    stars->unbind();
+    t = fmodf(t, 1.0);
 
-    float xcord = 0.7*std::cos(t);
-    float ycord = 0.7*std::sin(t);
-    TRS *= Eigen::Translation3f(xcord, ycord, 0);
-    TRS *= Eigen::AngleAxisf(t + M_PI / 2, Eigen::Vector3f::UnitZ());
-    TRS *= Eigen::AlignedScaling3f(0.2f, 0.2f, 1);
+    //BEZIER CURVE PATH
+    Vec2 p0 = Vec2(-0.7, 1.0);
+    Vec2 p1 = Vec2(-0.2, -1.2);
+    Vec2 p2 = Vec2(1.7, 0.2);
+    Vec2 xy = calculateBezier(t, p0, p1, p2);
+    float xcord = xy(0);
+    float ycord = xy(1);
 
-    quadShader->bind();
-    quadShader->set_uniform("M", TRS.matrix());
-    // Make texture unit 0 active
-    glActiveTexture(GL_TEXTURE0);
-    // Bind the texture to the active unit for drawing
-    cat->bind();
-    // Set the shader's texture uniform to the index of the texture unit we have
-    // bound the texture to
-    quadShader->set_uniform("tex", 0);
-    quad->set_attributes(*quadShader);
-    quad->draw();
-    cat->unbind();
+    //TRANSFORM MATRICES
+    //BACKGROUND
+    Transform background = Transform::Identity();
+    background *= Eigen::AngleAxisf(-(t2/14 + M_PI), Eigen::Vector3f::UnitZ());     //rotation
+    background *= Eigen::AlignedScaling3f(1.5, 1.5, 1);                            //size
+
+
+    //MOON
+    Transform mun = Transform::Identity();
+    mun *= Eigen::Translation3f(0.8, 1, 0);                                 //movement
+    mun *= Eigen::AlignedScaling3f(1.4, 1.4, 1);                            //rotation
+    mun *= Eigen::AngleAxisf(-(t2/4 + M_PI), Eigen::Vector3f::UnitZ());     //size
+
+    //PLANET EXPRESS DELIVERY SHIP
+    Transform planet_express = Transform::Identity();
+    planet_express *= Eigen::Translation3f(xcord, ycord, 0);                            //movement
+    planet_express  *= Eigen::AngleAxisf((1.6*t + M_PI) + 2, Eigen::Vector3f::UnitZ()); //rotation
+    planet_express  *= Eigen::AlignedScaling3f(0.1f + t/2, 0.05f + t/4, 1);             //size
+
+    //BENDER
+    Transform bonder = Transform::Identity();
+    float xcord2 = 0.2*std::cos(15*t);
+    float ycord2 = 0.2*std::sin(15*t);
+    bonder *= Eigen::Translation3f(xy(0) + xcord2, xy(1) + ycord2, 0);          //movement
+    bonder *= Eigen::AngleAxisf(-10*t2 + M_PI, Eigen::Vector3f::UnitZ());       //rotation
+    bonder *= Eigen::AlignedScaling3f(0.005 + t/8, 0.025 + t/6, 1);             //size
+
+    //DRAW ELEMENTS OF SCENE
+    drawElement(background, stars);
+    drawElement(mun, moon);
+    drawElement(planet_express, ship);
+    drawElement(bonder, bender);
+
     quadShader->unbind();
-
     glDisable(GL_BLEND);
 }
