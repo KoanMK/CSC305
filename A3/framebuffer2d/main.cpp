@@ -6,6 +6,7 @@ using namespace OpenGP;
 
 const int width=720, height=720;
 typedef Eigen::Transform<float,3,Eigen::Affine> Transform;
+#define POINTSIZE 10.0f
 
 const char* fb_vshader =
 #include "fb_vshader.glsl"
@@ -26,18 +27,14 @@ const char* line_vshader =
 const char* line_fshader =
 #include "line_fshader.glsl"
 ;
-/*
+
 const char* selection_vshader =
 #include "selection_vshader.glsl"
 ;
 const char* selection_fshader =
 #include "selection_fshader.glsl"
 ;
-*/
 
-std::unique_ptr<Shader> lineShader;
-std::unique_ptr<GPUMesh> line;
-std::vector<Vec2> controlPoints;
 
 const float SpeedFactor = 0.2;
 void init();
@@ -55,8 +52,15 @@ std::unique_ptr<RGBA8Texture> stars;
 std::unique_ptr<RGBA8Texture> moon;
 std::unique_ptr<RGBA8Texture> bender;
 
-/// TODO: declare Framebuffer and color buffer texture
+std::unique_ptr<Shader> lineShader;
+std::unique_ptr<GPUMesh> line;
+std::vector<Vec2> controlPoints;
 
+/// Selection with framebuffer pointers
+std::unique_ptr<Shader> selectionShader;
+std::unique_ptr<Framebuffer> selectionFB;
+std::unique_ptr<RGBA8Texture> selectionColor;
+std::unique_ptr<D16Texture> selectionDepth;
 
 
 int main(int, char**){
@@ -64,41 +68,100 @@ int main(int, char**){
     Application app;
     init();
 
-    /// TODO: initialize framebuffer
+    /// Selection shader
+    selectionShader = std::unique_ptr<Shader>(new Shader());
+    selectionShader->verbose = true;
+    selectionShader->add_vshader_from_source(selection_vshader);
+    selectionShader->add_fshader_from_source(selection_fshader);
+    selectionShader->link();
+    /// Framebuffer for selection shader
+    selectionFB = std::unique_ptr<Framebuffer>(new Framebuffer());
+    selectionColor = std::unique_ptr<RGBA8Texture>(new RGBA8Texture());
+    selectionColor->allocate(width,height);
+    selectionDepth = std::unique_ptr<D16Texture>(new D16Texture());
+    selectionDepth->allocate(width,height);
+    selectionFB->attach_color_texture(*selectionColor);
+    selectionFB->attach_depth_texture(*selectionDepth);
 
-    /// TODO: initialize color buffer texture, and allocate memory
+    // Mouse position and selected point
+    Vec2 pixelPosition = Vec2(0,0);
+    Vec2 position = Vec2(0,0);
+    Vec2 *selection = nullptr;
+    int offsetID = 0;
 
-
-    /// TODO: attach color texture to framebuffer
-
-
+    // Display callback
     Window& window = app.create_window([&](Window&){
         glViewport(0,0,width,height);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glPointSize(POINTSIZE);
+        drawScene(glfwGetTime());
 
-        /// TODO: First draw the scene onto framebuffer
-        /// bind and then unbind framebuffer
+        lineShader->bind();
 
-            glClear(GL_COLOR_BUFFER_BIT);
-            drawScene(glfwGetTime());
+        // Draw line white
+        lineShader->set_uniform("selection", -1);
+        line->set_attributes(*lineShader);
+        line->set_mode(GL_LINE_STRIP);
+//        line->draw();
 
+        // Draw points white and selected point blue
+        if(selection!=nullptr) lineShader->set_uniform("selection", int(selection-&controlPoints[0]));
+        line->set_mode(GL_POINTS);
+        line->draw();
 
-        /// Render to Window, uncomment the lines and do TODOs
-        //glViewport(0, 0, width, height);
-        //glClear(GL_COLOR_BUFFER_BIT);
-        //fbShader->bind();
-        /// TODO: Bind texture and set uniforms
-
-
-
-
-
-        //quad->set_attributes(*fbShader);
-        //quad->draw();
-        //fbShader->unbind();
+        lineShader->unbind();
     });
-    window.set_title("FrameBuffer");
+    window.set_title("Mouse");
     window.set_size(width, height);
 
+    // Mouse movement callback
+    window.add_listener<MouseMoveEvent>([&](const MouseMoveEvent &m){
+        // Mouse position in clip coordinates
+        pixelPosition = m.position;
+        Vec2 p = 2.0f*(Vec2(m.position.x()/width,-m.position.y()/height) - Vec2(0.5f,-0.5f));
+        if( selection && (p-position).norm() > 0.0f) {
+            selection->x() = position.x();
+            selection->y() = position.y();
+            line->set_vbo<Vec2>("vposition", controlPoints);
+        }
+        position = p;
+    });
+
+    // Mouse click callback
+    window.add_listener<MouseButtonEvent>([&](const MouseButtonEvent &e){
+        // Mouse selection case
+        if( e.button == GLFW_MOUSE_BUTTON_LEFT && !e.released) {
+
+            /// Draw element id's to framebuffer
+            selectionFB->bind();
+            glViewport(0,0,width, height);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Clear color must be 1,1,1,1
+            glPointSize(POINTSIZE);
+            selectionShader->bind();
+            selectionShader->set_uniform("offsetID", offsetID);
+            line->set_attributes(*selectionShader);
+            line->set_mode(GL_POINTS);
+            line->draw();
+            selectionShader->unbind();
+            glFlush();
+            glFinish();
+
+            selection = nullptr;
+            unsigned char a[4];
+            glReadPixels(int(pixelPosition[0]), height - int(pixelPosition[1]), 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &a);
+            selection = &controlPoints[0] + (int)a[0];
+            selectionFB->unbind();
+        }
+        // Mouse release case
+        if( e.button == GLFW_MOUSE_BUTTON_LEFT && e.released) {
+            if(selection) {
+                selection->x() = position.x();
+                selection->y() = position.y();
+                selection = nullptr;
+                line->set_vbo<Vec2>("vposition", controlPoints);
+            }
+        }
+    });
     return app.run();
 }
 
@@ -131,14 +194,16 @@ void init(){
     lineShader->link();
 
     controlPoints = std::vector<Vec2>();
-    controlPoints.push_back(Vec2(-0.7f,-0.2f));
-    controlPoints.push_back(Vec2(-0.3f, 0.2f));
-    controlPoints.push_back(Vec2( 0.3f, 0.5f));
-    controlPoints.push_back(Vec2( 0.7f, 0.0f));
+//    controlPoints.push_back(Vec2(-0.7f, 1.0f));       //nice points
+//    controlPoints.push_back(Vec2(-0.2f, -1.2f));
+//    controlPoints.push_back(Vec2( 1.7f, 0.2f));
+    controlPoints.push_back(Vec2(-0.7f, 0.95f));        //visible points
+    controlPoints.push_back(Vec2(-0.2f, -0.95f));
+    controlPoints.push_back(Vec2( 0.95f, 0.2f));
 
     line = std::unique_ptr<GPUMesh>(new GPUMesh());
     line->set_vbo<Vec2>("vposition", controlPoints);
-    std::vector<unsigned int> indices = {0,1,2,3};
+    std::vector<unsigned int> indices = {0,1,2};
     line->set_triangles(indices);
 }
 
@@ -187,6 +252,8 @@ void loadTexture(std::unique_ptr<RGBA8Texture> &texture, const char *filename) {
     texture->upload_raw(width, height, &image[0]);
 }
 
+//Credit for this method to Jakob Riedle (Stack Overflow).
+//takes values and computes the position of a point on the line between the lines p0-p1 and p1-p2.
 float getPt( float n1 , float n2 , float perc ) {
     float ret_val;
     float diff = n2 - n1;
@@ -196,7 +263,7 @@ float getPt( float n1 , float n2 , float perc ) {
 
 //Calaculates the bezier cureve given three points and the time variable.
 Vec2 calculateBezier(float t, Vec2 p0, Vec2 p1, Vec2 p2) {
-    Vec2 xy;
+    Vec2 xy;        //return value
 
     float xcord;
     float ycord;
@@ -243,19 +310,15 @@ void drawScene(float timeCount)
     t = fmodf(t, 1.0);
 
     //BEZIER CURVE PATH
-    Vec2 p0 = Vec2(-0.7, 1.0);
-    Vec2 p1 = Vec2(-0.2, -1.2);
-    Vec2 p2 = Vec2(1.7, 0.2);
-    Vec2 xy = calculateBezier(t, p0, p1, p2);
+    Vec2 xy = calculateBezier(t, controlPoints[0], controlPoints[1], controlPoints[2]);
     float xcord = xy(0);
     float ycord = xy(1);
 
-    //TRANSFORM MATRICES
+    /* TRANSFORM MATRICES */
     //BACKGROUND
     Transform background = Transform::Identity();
     background *= Eigen::AngleAxisf(-(t2/14 + M_PI), Eigen::Vector3f::UnitZ());     //rotation
     background *= Eigen::AlignedScaling3f(1.5, 1.5, 1);                            //size
-
 
     //MOON
     Transform mun = Transform::Identity();
