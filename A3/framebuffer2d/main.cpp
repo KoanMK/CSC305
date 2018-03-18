@@ -20,6 +20,25 @@ const char* quad_fshader =
 #include "quad_fshader.glsl"
 ;
 
+const char* line_vshader =
+#include "line_vshader.glsl"
+;
+const char* line_fshader =
+#include "line_fshader.glsl"
+;
+/*
+const char* selection_vshader =
+#include "selection_vshader.glsl"
+;
+const char* selection_fshader =
+#include "selection_fshader.glsl"
+;
+*/
+
+std::unique_ptr<Shader> lineShader;
+std::unique_ptr<GPUMesh> line;
+std::vector<Vec2> controlPoints;
+
 const float SpeedFactor = 0.2;
 void init();
 void quadInit(std::unique_ptr<GPUMesh> &quad);
@@ -104,6 +123,23 @@ void init(){
     loadTexture(bender, "bender.png");
     loadTexture(moon, "moon.png");
     loadTexture(stars, "space2.png");
+
+    lineShader = std::unique_ptr<Shader>(new Shader());
+    lineShader->verbose = true;
+    lineShader->add_vshader_from_source(line_vshader);
+    lineShader->add_fshader_from_source(line_fshader);
+    lineShader->link();
+
+    controlPoints = std::vector<Vec2>();
+    controlPoints.push_back(Vec2(-0.7f,-0.2f));
+    controlPoints.push_back(Vec2(-0.3f, 0.2f));
+    controlPoints.push_back(Vec2( 0.3f, 0.5f));
+    controlPoints.push_back(Vec2( 0.7f, 0.0f));
+
+    line = std::unique_ptr<GPUMesh>(new GPUMesh());
+    line->set_vbo<Vec2>("vposition", controlPoints);
+    std::vector<unsigned int> indices = {0,1,2,3};
+    line->set_triangles(indices);
 }
 
 void quadInit(std::unique_ptr<GPUMesh> &quad) {
