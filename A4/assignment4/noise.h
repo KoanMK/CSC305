@@ -30,7 +30,7 @@ R32FTexture* fBm2DTexture() {
 
     ///--- fBm parameters
     float H = 0.8f;
-    float lacunarity = 2.0f;
+    float lacunarity = 2.5f;
     float offset = 0.1f;
     const int octaves = 4;
 
@@ -44,7 +44,7 @@ R32FTexture* fBm2DTexture() {
 
     ///--- Precompute exponent array
     float *exponent_array = new float[octaves];
-    float f = 1.0f;
+    float f = 2.5f;
     for (int i = 0; i < octaves; ++i) {
         /// TODO: Implement this step according to Musgraves paper on fBM
         exponent_array[i] = pow( f, -H );

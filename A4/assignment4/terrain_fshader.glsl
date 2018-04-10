@@ -40,15 +40,15 @@ void main() {
 
     float h = texture(noiseTex, uv).x;
     //if(dot(N, vec3(0,0,1)) < cos(3.14f/2.1f)) {
-    if(dot(N, vec3(0,0,1)) < 0.08) {
+    if(dot(N, vec3(0,0,1)) < 0.15 && h > 0.1) {
         c = vec3(texture(rock, uv).xyz);
     } else if(h <= 0) {
         c = vec3(texture(water, uv).xyz);
-    } else if (h > 0 && h <= 0.02) {
+    } else if (h > 0 && h <= 0.015) {
         c = vec3(texture(sand, uv).xyz);
-    } else if (h > 0.02 && h <= 0.7) {
+    } else if (h > 0.015 && h <= 0.25) {
         c = vec3(texture(grass, uv).xyz);
-    } else if (h > 0.7) {
+    } else if (h > 0.25) {
         c = vec3(texture(snow, uv).xyz);
     }
 
